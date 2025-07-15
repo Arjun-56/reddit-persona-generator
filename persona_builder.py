@@ -10,7 +10,7 @@ api_key = os.getenv("OPENAI_API_KEY")
 if not api_key:
     raise ValueError("OPENAI_API_KEY is missing in .env")
 
-openai.api_key = api_key  # ✅ FIXED
+openai.api_key = api_key  
 
 def build_persona(posts, comments, username):
     content = "\n\n".join(posts + comments)
