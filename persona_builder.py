@@ -1,37 +1,39 @@
-import openai
 import os
 from dotenv import load_dotenv
+import openai
 
+# Load .env and set API key
 dotenv_path = os.path.join(os.path.dirname(__file__), '.env')
-load_dotenv()  # Loads API key from .env file
-print("Loaded key:", os.getenv("OPENAI_API_KEY")[:10], "...")
+load_dotenv(dotenv_path)
 
-openai.api_key = os.getenv("OPENAI_API_KEY")
+api_key = os.getenv("OPENAI_API_KEY")
+if not api_key:
+    raise ValueError("OPENAI_API_KEY is missing in .env")
 
+openai.api_key = api_key  # ✅ FIXED
 
 def build_persona(posts, comments, username):
     content = "\n\n".join(posts + comments)
 
     prompt = f"""
-You are an AI that analyzes Reddit users based on their posts and comments.
+You are an AI that analyzes a Reddit user.
 
-Based on the following content from the Reddit user **{username}**, generate a persona describing their:
+Based on the following content from **{username}**, generate a persona covering:
 
 - Interests
 - Personality traits
-- Opinions/beliefs
+- Opinions / beliefs
 - Writing style
-- Any inferred demographics (age group, gender, location — if detectable)
+- Inferred demographics (age band, likely gender, location if detectable)
 
-Also, for each point, cite the exact phrase or post/comment you used as evidence.
+For each bullet, cite the exact phrase (post or comment) you used as evidence.
 
-Here is the content:
-
-\"\"\"
+Content:
+\"\"\" 
 {content}
-\"\"\"
+\"\"\" 
 
-Format your answer as a readable profile.
+Return the profile as plain text.
 """
 
     response = openai.ChatCompletion.create(
@@ -40,4 +42,4 @@ Format your answer as a readable profile.
         temperature=0.7
     )
 
-    return response['choices'][0]['message']['content']
+    return response.choices[0].message.content
