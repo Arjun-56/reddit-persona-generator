@@ -4,7 +4,7 @@ from dotenv import load_dotenv
 
 dotenv_path = os.path.join(os.path.dirname(__file__), '.env')
 load_dotenv()  # Loads API key from .env file
-print("🔑 Loaded key:", os.getenv("OPENAI_API_KEY")[:10], "...")
+print("Loaded key:", os.getenv("OPENAI_API_KEY")[:10], "...")
 
 openai.api_key = os.getenv("OPENAI_API_KEY")
 
